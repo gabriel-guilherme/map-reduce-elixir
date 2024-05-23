@@ -13,8 +13,11 @@ end
 
 # Dá para dividir o repositório em partições iguais
 def particionar(repositorio, qtdparticoes) when length(repositorio)|> rem(qtdparticoes) == 0 do
+
   Enum.chunk_every(repositorio, div(length(repositorio), qtdparticoes))
 end
+
+def particionar(repositorio, qtdparticoes) when length(repositorio) < qtdparticoes, do: particionar(repositorio, length(repositorio))
 
 # Não dá pra dividir o repositório em partições iguais
 def particionar(repositorio, qtdparticoes) do

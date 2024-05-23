@@ -8,12 +8,22 @@ defmodule App do
     Task.async(NossoMap, :map, [particao,funcaoMap])
   end
 
+  defp reduce(particao, funcaoMap) do
+    Task.async(NossoReduce, :reduce, [particao,funcaoReduce])
+  end
+
   def executar(qtdparticoes, funcaoMap, _) do
     getRepositorio()
     |>Particao.particionar(qtdparticoes)
     |>Enum.map(fn particao -> map(particao,funcaoMap) end )
     # Esperar por uma lista de tasks
     |>Task.await_many
+    |> List.flatten()
+    |> Enum.group_by(fn {key, _} -> key end, fn {_, valor} -> valor end)
+    |> Map.to_list
+    |> Particao.particionar(qtdparticoes)
+    |> Enum.Map(fn particao -> reduce(particao, funcaoReduce end))
+    |> Task.await_many
   end
 
   def executarSync(funcaoMap, _) do
@@ -76,8 +86,6 @@ end
 
 defmodule Mapper do
   def map(input) do
-    input
-    #|> String.split()
-    |> Enum.map(fn word -> {word, 1} end)
+    {String.to_atom(input), 1}
   end
 end
