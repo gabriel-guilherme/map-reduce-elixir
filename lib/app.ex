@@ -1,11 +1,10 @@
 defmodule App do
-
   def getRepositorio() do
-    EntradaSaida.lerRegistros("input.txt")
+    ES.lerArquivo("input.txt")
   end
 
   defp map(particao, funcaoMap) do
-    Task.async(NossoMap, :map, [particao,funcaoMap])
+    Task.async(NossoMap, :map, [particao, funcaoMap])
   end
 
   defp reduce(particao, funcaoMap) do
@@ -28,23 +27,27 @@ defmodule App do
 
   def executarSync(funcaoMap, _) do
     getRepositorio()
-    |>NossoMap.map(funcaoMap)
-    |>Enum.to_list
+    |> NossoMap.map(funcaoMap)
+    |> Enum.to_list()
   end
 
   def testarSync() do
-    executarSync(fn x -> OpCustosa.nth_prime(x) end, fn x -> x*2 end )
+    executarSync(fn x -> OpCustosa.nth_prime(x) end, fn x -> x * 2 end)
   end
 
   def testar(qtdparticoes) do
-    executar(qtdparticoes,fn x -> Mapper.map(x) end, fn x -> x*2 end )
+    executar(qtdparticoes, &Mapper.map/1, fn x -> x * 2 end)
   end
+end
 
+defmodule Mapper do
+  def map(elemento) do
+    {elemento, 1}
+  end
 end
 
 ## MODULO COM UMA FUNÇÃO CUSTOSA GERADA PELO CHAT GPT
 defmodule OpCustosa do
-
   # Função para encontrar o n-ésimo número primo
   def nth_prime(n) when n <= 0 do
     {:error, "Input must be a positive integer"}
@@ -70,11 +73,13 @@ defmodule OpCustosa do
   # Função para verificar se um número é primo
   defp is_prime(2), do: true
   defp is_prime(n) when n < 2 or rem(n, 2) == 0, do: false
+
   defp is_prime(n) do
     is_prime(n, 3)
   end
 
   defp is_prime(n, divisor) when divisor * divisor > n, do: true
+
   defp is_prime(n, divisor) do
     if rem(n, divisor) == 0 do
       false
@@ -83,9 +88,12 @@ defmodule OpCustosa do
     end
   end
 end
+<<<<<<< HEAD
 
 defmodule Mapper do
   def map(input) do
     {String.to_atom(input), 1}
   end
 end
+=======
+>>>>>>> 46e96341e9287877de3a0b82c518862f14139984
