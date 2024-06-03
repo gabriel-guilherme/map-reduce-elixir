@@ -1,28 +1,29 @@
 defmodule App do
   def getRepositorio() do
-    ES.lerArquivo("input.txt")
+    ES.lerArquivo("sherk.txt")
   end
 
   defp map(particao, funcaoMap) do
+    # IO.inspect(particao)
     Task.async(NossoMap, :map, [particao, funcaoMap])
   end
 
-  defp reduce(particao, funcaoMap) do
+  defp reduce(particao, funcaoReduce) do
     Task.async(NossoReduce, :reduce, [particao,funcaoReduce])
   end
 
-  def executar(qtdparticoes, funcaoMap, _) do
+  def executar(qtdparticoes, funcaoMap, funcaoReduce) do
     getRepositorio()
-    |>Particao.particionar(qtdparticoes)
-    |>Enum.map(fn particao -> map(particao,funcaoMap) end )
+    |> Particao.particionar(qtdparticoes)
+    |> Enum.map(fn particao -> map(particao,funcaoMap) end )
     # Esperar por uma lista de tasks
-    |>Task.await_many
+    |> Task.await_many()
     |> List.flatten()
     |> Enum.group_by(fn {key, _} -> key end, fn {_, valor} -> valor end)
     |> Map.to_list
     |> Particao.particionar(qtdparticoes)
-    |> Enum.Map(fn particao -> reduce(particao, funcaoReduce end))
-    |> Task.await_many
+    |> Enum.map(fn particao -> reduce(particao, funcaoReduce) end)
+    |> Task.await_many()
   end
 
   def executarSync(funcaoMap, _) do
@@ -35,13 +36,26 @@ defmodule App do
     executarSync(fn x -> OpCustosa.nth_prime(x) end, fn x -> x * 2 end)
   end
 
+  def listaReducer(chave, lista) do
+    total = Enum.count(lista)
+    # IO.puts("#{chave}")
+    if chave == "shrek" do
+      IO.puts("#{chave}: #{total}")
+    end
+  end
+
   def testar(qtdparticoes) do
-    executar(qtdparticoes, &Mapper.map/1, fn x -> x * 2 end)
+    executar(qtdparticoes, &Mapper.map/1, &listaReducer/2)
   end
 end
 
 defmodule Mapper do
   def map(elemento) do
+    elemento = elemento
+    # |> String.downcase()
+    |> String.replace(~r/\r?\n/, " ")
+    # |> String.replace(~r/[^[:alnum:][:space:]\p{L}]/u, "")
+
     {elemento, 1}
   end
 end
@@ -88,12 +102,12 @@ defmodule OpCustosa do
     end
   end
 end
-<<<<<<< HEAD
+# <<<<<<< HEAD
 
-defmodule Mapper do
-  def map(input) do
-    {String.to_atom(input), 1}
-  end
-end
-=======
->>>>>>> 46e96341e9287877de3a0b82c518862f14139984
+# defmodule Mapper do
+#   def map(input) do
+#     {String.to_atom(input), 1}
+#   end
+# end
+# =======
+# >>>>>>> 46e96341e9287877de3a0b82c518862f14139984

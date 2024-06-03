@@ -1,9 +1,8 @@
 {application,map_red,
-             [{optional_applications,[]},
-              {applications,[kernel,stdlib,elixir,logger]},
+             [{applications,[kernel,stdlib,elixir,logger]},
               {description,"map_red"},
               {modules,['Elixir.App','Elixir.ES','Elixir.Mapper',
-                        'Elixir.NossoMap','Elixir.OpCustosa',
-                        'Elixir.Particao']},
+                        'Elixir.NossoMap','Elixir.NossoReduce',
+                        'Elixir.OpCustosa','Elixir.Particao']},
               {registered,[]},
               {vsn,"0.1.0"}]}.
