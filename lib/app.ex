@@ -36,9 +36,9 @@ defmodule App do
     executarSync(fn x -> OpCustosa.nth_prime(x) end, fn x -> x * 2 end)
   end
 
+  # Função reducer do usuário
   def listaReducer(chave, lista) do
     total = Enum.count(lista)
-    # IO.puts("#{chave}")
     if chave == "shrek" do
       IO.puts("#{chave}: #{total}")
     end
@@ -51,63 +51,54 @@ end
 
 defmodule Mapper do
   def map(elemento) do
-    elemento = elemento
-    # |> String.downcase()
-    |> String.replace(~r/\r?\n/, " ")
-    # |> String.replace(~r/[^[:alnum:][:space:]\p{L}]/u, "")
+    # elemento = elemento
+                # |> String.downcase()
+                # |> String.replace(~r/\r?\n/, " ")
+                # |> String.replace(~r/[^[:alnum:][:space:]\p{L}]/u, "")
 
     {elemento, 1}
   end
 end
 
-## MODULO COM UMA FUNÇÃO CUSTOSA GERADA PELO CHAT GPT
-defmodule OpCustosa do
-  # Função para encontrar o n-ésimo número primo
-  def nth_prime(n) when n <= 0 do
-    {:error, "Input must be a positive integer"}
-  end
+# ## MODULO COM UMA FUNÇÃO CUSTOSA GERADA PELO CHAT GPT
+# defmodule OpCustosa do
+#   # Função para encontrar o n-ésimo número primo
+#   def nth_prime(n) when n <= 0 do
+#     {:error, "Input must be a positive integer"}
+#   end
 
-  def nth_prime(n) do
-    nth_prime(n, 2, 0)
-  end
+#   def nth_prime(n) do
+#     nth_prime(n, 2, 0)
+#   end
 
-  # Função auxiliar recursiva para encontrar o n-ésimo número primo
-  defp nth_prime(n, candidate, count) do
-    if is_prime(candidate) do
-      if count + 1 == n do
-        candidate
-      else
-        nth_prime(n, candidate + 1, count + 1)
-      end
-    else
-      nth_prime(n, candidate + 1, count)
-    end
-  end
+#   # Função auxiliar recursiva para encontrar o n-ésimo número primo
+#   defp nth_prime(n, candidate, count) do
+#     if is_prime(candidate) do
+#       if count + 1 == n do
+#         candidate
+#       else
+#         nth_prime(n, candidate + 1, count + 1)
+#       end
+#     else
+#       nth_prime(n, candidate + 1, count)
+#     end
+#   end
 
-  # Função para verificar se um número é primo
-  defp is_prime(2), do: true
-  defp is_prime(n) when n < 2 or rem(n, 2) == 0, do: false
+#   # Função para verificar se um número é primo
+#   defp is_prime(2), do: true
+#   defp is_prime(n) when n < 2 or rem(n, 2) == 0, do: false
 
-  defp is_prime(n) do
-    is_prime(n, 3)
-  end
+#   defp is_prime(n) do
+#     is_prime(n, 3)
+#   end
 
-  defp is_prime(n, divisor) when divisor * divisor > n, do: true
+#   defp is_prime(n, divisor) when divisor * divisor > n, do: true
 
-  defp is_prime(n, divisor) do
-    if rem(n, divisor) == 0 do
-      false
-    else
-      is_prime(n, divisor + 2)
-    end
-  end
-end
-# <<<<<<< HEAD
-
-# defmodule Mapper do
-#   def map(input) do
-#     {String.to_atom(input), 1}
+#   defp is_prime(n, divisor) do
+#     if rem(n, divisor) == 0 do
+#       false
+#     else
+#       is_prime(n, divisor + 2)
+#     end
 #   end
 # end
-# =======
-# >>>>>>> 46e96341e9287877de3a0b82c518862f14139984
