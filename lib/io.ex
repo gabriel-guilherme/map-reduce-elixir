@@ -2,10 +2,9 @@ defmodule ES do
   def lerArquivo(path) do
     case File.read(path) do
       {:ok, conteudo} ->
-        conteudo |> String.downcase()
-              |> String.replace(~r/\r?\n/, " ")
-              |> String.replace(~r/[^[:alnum:][:space:]\p{L}]/u, "")
-              |> String.split(" ")
+        conteudo
+                |> String.replace(~r/\r?\n/, " ")
+                |> String.split(" ")
 
 
       {:error, _reason} ->
