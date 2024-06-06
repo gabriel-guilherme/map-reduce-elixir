@@ -1,0 +1,25 @@
+defmodule Benchmark do
+
+lista = Enum.to_list(1..50000)
+
+Benchee.run(%{ 
+    "particionar nao-recursivo 15 part" => fn -> Particao.particionar(lista,15) end,
+    "particionar nao-recursivo 50 part" => fn -> Particao.particionar(lista,50) end,
+    "particionar nao-recursivo 150 part" => fn -> Particao.particionar(lista,150) end,
+    "particionar recursivo 15 part" => fn -> TesteDesempenho.particionar(lista,15) end,
+    "particionar recursivo 50 part" => fn -> TesteDesempenho.particionar(lista,50) end,
+    "particionar recursivo 150 part" => fn -> TesteDesempenho.particionar(lista,150) end,
+}, memory_time: 2)
+
+end
+
+
+defmodule Benchmark do
+Benchee.run(%{ 
+    "sync" => fn -> TesteDesempenho.testarSync() end,
+    "async-5" => fn -> App.demo(5) end,
+    "async-15" => fn -> App.demo(15) end,
+    "async-30" => fn -> App.demo(30) end,
+}, memory_time: 2)
+
+end
