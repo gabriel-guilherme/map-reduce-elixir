@@ -3,9 +3,8 @@ defmodule ES do
     case File.read(path) do
       {:ok, conteudo} ->
         conteudo
-                |> String.replace(~r/\r?\n/, " ")
-                |> String.split(" ")
-
+        |> String.replace(~r/\r?\n/, " ")
+        |> String.split(" ")
 
       {:error, _reason} ->
         IO.puts("Erro ao ler o arquivo")

@@ -1,37 +1,28 @@
 defmodule Particao do
-  # Não há elementos restantes para serem distribuídos, o restante do repositório pode ser dividido em partes iguais.
-  defp distribuir(repositorio, qtdelementos, 0, _) do
-    Enum.chunk_every(repositorio, qtdelementos - 1)
-  end
-
-  # Há elementos restantes para distribuir nas primeiras partições
-  defp distribuir(repositorio, qtdelementos, restos, tamanhoRepositorio) do
-    # O primeiro elemento será uma lista com a quantidade de elementos definida e a aplicação recursiva da função ao restante do repositório
-    [
-      Enum.take(repositorio, qtdelementos)
-      | Enum.slice(repositorio, qtdelementos..tamanhoRepositorio)
-        |> distribuir(qtdelementos, restos - 1, tamanhoRepositorio - qtdelementos)
-    ]
-  end
-
-  # Dá para dividir o repositório em partições iguais
-  def particionar(repositorio, qtdparticoes) when length(repositorio) |> rem(qtdparticoes) == 0 do
-    Enum.chunk_every(repositorio, div(length(repositorio), qtdparticoes))
-  end
+def particionar(repositorio, qtdparticoes) when length(repositorio) < qtdparticoes, do: particionar(repositorio, length(repositorio) )
 
 # Dá para dividir o repositório em partições iguais
 def particionar(repositorio, qtdparticoes) when length(repositorio)|> rem(qtdparticoes) == 0 do
-
   Enum.chunk_every(repositorio, div(length(repositorio), qtdparticoes))
 end
 
-def particionar(repositorio, qtdparticoes) when length(repositorio) < qtdparticoes, do: particionar(repositorio, length(repositorio))
-
-# Não dá pra dividir o repositório em partições iguais
 def particionar(repositorio, qtdparticoes) do
-  # A quantidade que restaria de elementos vai ser distribuída nas primeiras partições, assim, essas partições terão um elemento a mais
-  length(repositorio)
-  |> (&(   distribuir(repositorio, div(&1, qtdparticoes) +1, rem(&1,qtdparticoes), &1)  )).()
+  tamanhoLista = length(repositorio)
+  # quantidade de elementos que deve haver em cada partição
+  qtdelementos = div(tamanhoLista, qtdparticoes)
+
+  # quantidade de elementos que ficariam sobrando em uma divisão exata de elementos por partição
+  rem(tamanhoLista, qtdparticoes)
+  # calcula até onde vai a última partição que terá elemento extra do resto
+  |> Kernel.*(qtdelementos+1)
+  # gera duas listas, uma com os elementos das partições que terão um elemento extra cada,
+  # uma com os elementos das partições que não terão um elemento extra
+  |> (& (Enum.split(repositorio,&1)) ).()
+  # "corta" as partições de ambas as listas e as une em uma única lista
+  |> then(fn {parteComRestos, parteSemRestos} -> 
+    Enum.chunk_every(parteComRestos, qtdelementos+1) 
+    ++ Enum.chunk_every(parteSemRestos, qtdelementos)
+    end)
 end
 
 end
